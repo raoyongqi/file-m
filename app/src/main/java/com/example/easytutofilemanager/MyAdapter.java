@@ -17,15 +17,43 @@ import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import android.util.Log;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
 
     Context context;
     File[] filesAndFolders;
 
-    public MyAdapter(Context context, File[] filesAndFolders){
+    public MyAdapter(Context context, File[] filesAndFolders) {
         this.context = context;
         this.filesAndFolders = filesAndFolders;
+
+        // 输出文件夹中项目的数量
+        Log.d("MyAdapter", "文件夹中有 " + filesAndFolders.length + " 个项目");
+
+        // 遍历文件夹中的文件和文件夹
+        for (File file : filesAndFolders) {
+            // 判断文件是否为文件夹
+            if (file.isDirectory()) {
+                // 判断文件夹名称是否为 "DCIM"
+                if (file.getName().equalsIgnoreCase("DCIM")) {
+                    Log.d("MyAdapter", "DCIM 文件夹名称: " + file.getName());
+
+                    // 获取 "DCIM" 文件夹中的文件
+                    File[] dcimFiles = file.listFiles();
+                    if (dcimFiles != null) {
+                        // 处理 "DCIM" 文件夹中的文件
+                        for (File dcimFile : dcimFiles) {
+                            Log.d("MyAdapter", "DCIM 文件名称: " + dcimFile.getName());
+                        }
+                    }
+                }
+            } else {
+                // 如果是文件而不是文件夹，检查是否属于 "DCIM"
+                if (file.getParentFile() != null && file.getParentFile().getName().equalsIgnoreCase("DCIM")) {
+                    Log.d("MyAdapter", "DCIM 文件名称: " + file.getName());
+                }
+            }
+        }
     }
 
 

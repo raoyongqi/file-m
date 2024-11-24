@@ -21,17 +21,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 在Activity创建时直接检查权限
-        if (checkPermission()) {
-            // 如果权限已授予，直接跳转到 FileListActivity
-            Intent intent = new Intent(MainActivity.this, FileListActivity.class);
-            String path = Environment.getExternalStorageDirectory().getPath();
-            intent.putExtra("path", path);
-            startActivity(intent);
-        } else {
-            // 如果没有权限，直接请求权限
-            requestPermission();
-        }
+        setContentView(R.layout.activity_main);
+
+        MaterialButton storageBtn = findViewById(R.id.storage_btn);
+
+        storageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkPermission()){
+                    //permission allowed
+                    Intent intent = new Intent(MainActivity.this, FileListActivity.class);
+                    String path = Environment.getExternalStorageDirectory().getPath();
+                    intent.putExtra("path",path);
+                    startActivity(intent);
+                }else{
+                    //permission not allowed
+                    requestPermission();
+
+                }
+            }
+        });
 
     }
 
@@ -46,11 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private void requestPermission(){
         if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)){
             Toast.makeText(MainActivity.this,"Storage permission is requires,please allow from settings",Toast.LENGTH_SHORT).show();
-        }else{
-        ActivityCompat.requestPermissions(MainActivity.this,new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},111);
-// 异步检查权限
-        }
-
-
+        }else
+            ActivityCompat.requestPermissions(MainActivity.this,new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},111);
     }
 }
